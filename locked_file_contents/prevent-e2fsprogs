@@ -1,0 +1,6 @@
+# This file should go in:
+# /etc/apt/preferences.d/prevent-e2fsprogs
+
+Package: e2fsprogs
+Pin: release *
+Pin-Priority: -1
