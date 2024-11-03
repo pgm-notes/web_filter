@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+import argparse
 import subprocess
 import hashlib
 import os
@@ -102,21 +105,45 @@ def update_file_contents():
 
 
 def main():
-    if not os.path.isfile(LOCKED_FILENAME_LIST):
-        print(f"Error: File \"{LOCKED_FILENAME_LIST}\" has not been created yet! "
-              "These are paths to your hosts file, resolv.conf, and any other files "
-              "for docker or apt regarding e2fsprogs")
-        exit(1)
 
-    if update_file_contents():
-        print("UPDATED SUCCESSFULLY\n\nYou may close this window. God is amazing. Thank Him always.\n")
-        print(ASCII_ART_OF_MESSIAH)
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        '--update', 
+        dest = 'update_files',
+        action = 'store_true', 
+        help = 'This pulls the latest repo files and updates local copies, leaving files locked afterward',
+    )
+    group.add_argument(
+        '--check-usb-key',
+        dest = 'check_usb_key',
+        action = 'store_true', 
+        help='Ensures the authentic USB key is inserted to run privileged softrware like docker',
+    )
+    
+    args = parser.parse_args()
+    if args.check_usb_key:
+        if not is_usb_key_authentic():
+            print("ERROR: Authentic USB Key is not found")
+            exit(1)
         exit(0)
-    else:
-        print("UPDATE FAILED\n\nPlease debug by trying manually to get an error statement")
-        exit(1)
 
+    elif args.update_files:
+        if not os.path.isfile(LOCKED_FILENAME_LIST):
+            print(f"Error: File \"{LOCKED_FILENAME_LIST}\" has not been created yet! "
+                "These are paths to your hosts file, resolv.conf, and any other files "
+                "for docker or apt regarding e2fsprogs")
+            exit(1)
 
+        if update_file_contents():
+            print("UPDATED SUCCESSFULLY\n\nYou may close this window. God is amazing. Thank Him always.\n")
+            print(ASCII_ART_OF_MESSIAH)
+            exit(0)
+        else:
+            print("UPDATE FAILED\n\nPlease debug by trying manually to get an error statement")
+            exit(1)
+
+            
 if __name__ == "__main__":
     main()
 
