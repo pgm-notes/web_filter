@@ -71,7 +71,7 @@ def set_files_immutable(immutable=True):
     print(f"FINISHED {'LOCKING' if immutable else 'UNLOCKING'} FILES")
 
 
-def update_file_contents():
+def update_file_contents(run_git_pull=True):
 
     # Check USB Authenticity
     print("Checking USB key authenticity")
@@ -80,18 +80,19 @@ def update_file_contents():
         exit(1)
 
     # Git Pull
-    initial_checksum = hashlib.sha256(open(SCRIPT_PATH, 'rb').read()).hexdigest()
-    print("Running git pull...")
-    git_pull_output = subprocess.run(["git", "pull"], check=True, capture_output=True, text=True)
-    updated_checksum = hashlib.sha256(open(SCRIPT_PATH, 'rb').read()).hexdigest()
+    if run_git_pull != False:
+        initial_checksum = hashlib.sha256(open(SCRIPT_PATH, 'rb').read()).hexdigest()
+        print("Running git pull...")
+        git_pull_output = subprocess.run(["git", "pull"], check=True, capture_output=True, text=True)
+        updated_checksum = hashlib.sha256(open(SCRIPT_PATH, 'rb').read()).hexdigest()
 
-    if updated_checksum != initial_checksum:
-        print("WARNING: Script updated during git pull. Please re-run the script.")
-        sys.exit(0)  # Exit to avoid inconsistent state
-    if "Already up to date." in git_pull_output.stdout:
-        print("USB Key repo already up to date. Proceeding to update local files.")
-    else:
-        print("Git pull complete. Proceeding to update local files.")
+        if updated_checksum != initial_checksum:
+            print("WARNING: Script updated during git pull. Please re-run the script.")
+            sys.exit(0)  # Exit to avoid inconsistent state
+        if "Already up to date." in git_pull_output.stdout:
+            print("USB Key repo already up to date. Proceeding to update local files.")
+        else:
+            print("Git pull complete. Proceeding to update local files.")
 
     # Update files
     set_files_immutable(False)
@@ -109,10 +110,16 @@ def main():
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
-        '--update', 
+        '--update-from-git', 
         dest = 'update_files',
         action = 'store_true', 
         help = 'This pulls the latest repo files and updates local copies, leaving files locked afterward',
+    )
+    group.add_argument(
+        '--update-from-usb',
+        dest = 'update_files_from_usb_only',
+        action = 'store_true',
+        help = 'Use this if you cannot run git pull',
     )
     group.add_argument(
         '--check-usb-key',
@@ -128,14 +135,19 @@ def main():
             exit(1)
         exit(0)
 
-    elif args.update_files:
+    elif args.update_files or args.update_files_from_usb_only:
         if not os.path.isfile(LOCKED_FILENAME_LIST):
             print(f"Error: File \"{LOCKED_FILENAME_LIST}\" has not been created yet! "
                 "These are paths to your hosts file, resolv.conf, and any other files "
                 "for docker or apt regarding e2fsprogs")
             exit(1)
 
-        if update_file_contents():
+        update_success = False
+        if args.update_files_from_usb_only:
+            update_success = update_file_contents(run_git_pull=False)
+        else:
+            update_success = update_file_contents()
+        if update_success:
             print("UPDATED SUCCESSFULLY\n\nYou may close this window. God is amazing. Thank Him always.\n")
             print(ASCII_ART_OF_MESSIAH)
             exit(0)
