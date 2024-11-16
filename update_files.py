@@ -6,7 +6,7 @@ import hashlib
 import os
 import shutil
 
-LOCKED_FILENAME_LIST = './locked_filenames.txt'
+LOCKED_FILENAME_LIST = './assets/locked_filenames.txt'
 CHATTR = './assets/chattr'
 DEVICE_UUID_HASH_FILE = './assets/device_uuid_hash.txt'
 SCRIPT_PATH = os.path.realpath(__file__)  # Absolute path to the current script
