@@ -1,0 +1,2 @@
+FROM <image_name_and_tag>
+RUN rm -f /bin/chattr
