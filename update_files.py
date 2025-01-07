@@ -30,7 +30,6 @@ def get_number_of_files_to_lock():
     with open(LOCKED_FILENAME_LIST, 'r') as file:
         return sum(1 for _ in file)
 
-
 def is_usb_key_authentic():
     try:
         output = subprocess.check_output("lsblk -o MOUNTPOINTS,UUID | grep CHATTR_EXT4", shell=True)
@@ -108,34 +107,55 @@ def update_file_contents(run_git_pull=True):
 def main():
 
     parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    mut_exclusive_group = parser.add_mutually_exclusive_group(required=True)
+    mut_exclusive_docker_group = parser.add_mutually_exclusive_group(required=False)
+    mut_exclusive_group.add_argument(
         '--update-from-git', 
         dest = 'update_files',
         action = 'store_true', 
         help = 'This pulls the latest repo files and updates local copies, leaving files locked afterward',
     )
-    group.add_argument(
+    mut_exclusive_group.add_argument(
         '--update-from-usb',
         dest = 'update_files_from_usb_only',
         action = 'store_true',
         help = 'Use this if you cannot run git pull',
     )
-    group.add_argument(
+    mut_exclusive_group.add_argument(
+        '--lock',
+        dest = 'lock_current',
+        action = 'store_true',
+        help = 'Lock current file versions on host computer disk',
+    )
+    mut_exclusive_group.add_argument(
+        '--unlock',
+        dest = 'unlock_current',
+        action = 'store_true',
+        help = 'Unlock current file versions on host computer disk.  Do not leave files unlocked'
+    )
+    mut_exclusive_group.add_argument(
         '--check-usb-key',
         dest = 'check_usb_key',
         action = 'store_true', 
         help='Ensures the authentic USB key is inserted to run privileged softrware like docker',
     )
+
+    mut_exclusive_docker_group.add_argument(
+        '--docker-accessible',
+        dest = 'docker_accessible',
+        action = 'store_true',
+        help = 'Select this if you wish to have docker access',
+    )
     
     args = parser.parse_args()
-    if args.check_usb_key:
-        if not is_usb_key_authentic():
-            print("ERROR: Authentic USB Key is not found")
-            exit(1)
+
+    if not is_usb_key_authentic():
+        print("ERROR: Authentic USB Key is not found")
+        exit(1)
+    elif args.check_usb_key:
         exit(0)
 
-    elif args.update_files or args.update_files_from_usb_only:
+    if args.update_files or args.update_files_from_usb_only:
         if not os.path.isfile(LOCKED_FILENAME_LIST):
             print(f"Error: File \"{LOCKED_FILENAME_LIST}\" has not been created yet! "
                 "These are paths to your hosts file, resolv.conf, and any other files "
@@ -154,6 +174,13 @@ def main():
         else:
             print("UPDATE FAILED\n\nPlease debug by trying manually to get an error statement")
             exit(1)
+    elif args.lock_current:
+        set_files_immutable(True)
+    elif args.unlock_current:
+        set_files_immutable(False)
+    print(f"Successfully {'un' if args.unlock_current else ''}locked all files.")
+    print("Do not leave files unlocked.  It is UNWISE, get out of there or fix the issue.") if args.unlock_current else None
+    exit(0)
 
             
 if __name__ == "__main__":
