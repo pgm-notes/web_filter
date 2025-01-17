@@ -1,5 +1,6 @@
 /etc/hosts
 /etc/resolv.conf
 /etc/apt/preferences.d/prevent-e2fsprogs
+/etc/apt/preferences.d/prevent-torrent-client
 /etc/squid/squid.conf
 /etc/squid/allowlist.txt

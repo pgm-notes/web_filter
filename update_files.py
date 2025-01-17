@@ -8,7 +8,6 @@ import shutil
 
 LOCKED_FILENAME_LIST = './assets/locked_filenames.txt'
 CHATTR = './assets/chattr'
-DEVICE_UUID_HASH_FILE = './assets/device_uuid_hash.txt'
 SCRIPT_PATH = os.path.realpath(__file__)  # Absolute path to the current script
 ASCII_ART_OF_MESSIAH = """
                 |
@@ -34,8 +33,8 @@ def is_usb_key_authentic():
     try:
         output = subprocess.check_output("lsblk -o MOUNTPOINTS,UUID | grep CHATTR_EXT4", shell=True)
         key_name, key_uuid = output.decode().strip().split()
-        key_hash = hashlib.sha256(key_name.encode()).hexdigest()
-        if key_hash != "a89d81f75e8d0d25c234a2634b99d4f582a5e1e58f5a21d333161879fe66fb03":
+        key_hash = hashlib.sha256(key_uuid.encode()).hexdigest()
+        if key_hash != "b28ea7a4e68b07080dd71444d4b7a9be3199ec8fb7c8105fbe6a1a463fddea9c":
             print("USB Key is not Authentic!")
             return False
 

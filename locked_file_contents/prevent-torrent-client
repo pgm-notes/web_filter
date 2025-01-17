@@ -1,0 +1,79 @@
+# This file should go in:
+# /etc/apt/preferences.d/prevent-torrent-client
+
+Package: biglybt
+Pin: release *
+Pin-Priority: -1
+
+Package: bitstormlite
+Pin: release *
+Pin-Priority: -1
+
+Package: btcheck
+Pin: release *
+Pin-Priority: -1
+
+Package: btpd
+Pin: release *
+Pin-Priority: -1
+
+Package: ctorrent
+Pin: release *
+Pin-Priority: -1
+
+Package: deluge
+Pin: release *
+Pin-Priority: -1
+
+Package: deluge-console
+Pin: release *
+Pin-Priority: -1
+
+Package: deluge-gtk
+Pin: release *
+Pin-Priority: -1
+
+Package: deluge-web
+Pin: release *
+Pin-Priority: -1
+
+Package: deluged
+Pin: release *
+Pin-Priority: -1
+
+Package: ktorrent
+Pin: release *
+Pin-Priority: -1
+
+Package: lftp
+Pin: release *
+Pin-Priority: -1
+
+Package: qbittorrent
+Pin: release *
+Pin-Priority: -1
+
+Package: qbittorrent-nox
+Pin: release *
+Pin-Priority: -1
+
+Package: rtorrent
+Pin: release *
+Pin-Priority: -1
+
+Package: transmission
+Pin: release *
+Pin-Priority: -1
+
+Package: twatch
+Pin: release *
+Pin-Priority: -1
+
+Package: unworkable
+Pin: release *
+Pin-Priority: -1
+
+Package: vlc-plugin-bittorrent
+Pin: release *
+Pin-Priority: -1
+
