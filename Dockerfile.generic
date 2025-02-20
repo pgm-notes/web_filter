@@ -1,2 +1,3 @@
 FROM <image_name_and_tag>
+USER root
 RUN rm -f /bin/chattr
