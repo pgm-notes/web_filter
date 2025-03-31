@@ -1,0 +1,5 @@
+{
+    "DnsOverHttpsMode": "secure",
+    "DnsOverHttpsTemplates": "https://208.67.222.123/dns-query https://208.67.220.123/dns-query",
+    "TorDisabled": true
+}

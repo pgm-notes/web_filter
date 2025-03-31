@@ -1,0 +1,2 @@
+/etc/squid/squid.conf
+/etc/squid/allowlist.txt

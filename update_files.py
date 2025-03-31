@@ -6,9 +6,9 @@ import hashlib
 import os
 import shutil
 
-LOCKED_FILENAME_LIST = './assets/locked_filenames.txt'
-CHATTR = './assets/chattr'
 SCRIPT_PATH = os.path.realpath(__file__)  # Absolute path to the current script
+LOCKED_FILEPATH_LIST = './assets/locked_filenames.txt'
+CHATTR = './assets/chattr'
 ASCII_ART_OF_MESSIAH = """
                 |
             \       /
@@ -26,7 +26,7 @@ ASCII_ART_OF_MESSIAH = """
 """
 
 def get_number_of_files_to_lock():
-    with open(LOCKED_FILENAME_LIST, 'r') as file:
+    with open(LOCKED_FILEPATH_LIST, 'r') as file:
         return sum(1 for _ in file)
 
 def is_usb_key_authentic():
@@ -50,7 +50,7 @@ def set_files_immutable(immutable=True):
     mode = '+' if immutable else '-'
     number_of_files_to_lock = get_number_of_files_to_lock()
 
-    with open(LOCKED_FILENAME_LIST, 'r') as file:
+    with open(LOCKED_FILEPATH_LIST, 'r') as file:
         for target_filename in file:
             target_filename = target_filename.strip()
             try:
@@ -94,7 +94,7 @@ def update_file_contents(run_git_pull=True):
 
     # Update files
     set_files_immutable(False)
-    with open(LOCKED_FILENAME_LIST, 'r') as file:
+    with open(LOCKED_FILEPATH_LIST, 'r') as file:
         for target_path in file:
             target_path = target_path.strip()
             git_copy_filename = "./locked_file_contents/" + os.path.basename(target_path)
@@ -155,8 +155,8 @@ def main():
         exit(0)
 
     if args.update_files or args.update_files_from_usb_only:
-        if not os.path.isfile(LOCKED_FILENAME_LIST):
-            print(f"Error: File \"{LOCKED_FILENAME_LIST}\" has not been created yet! "
+        if not os.path.isfile(LOCKED_FILEPATH_LIST):
+            print(f"Error: File \"{LOCKED_FILEPATH_LIST}\" has not been created yet! "
                 "These are paths to your hosts file, resolv.conf, and any other files "
                 "for docker or apt regarding e2fsprogs")
             exit(1)
