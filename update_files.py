@@ -11,7 +11,7 @@ LOCKED_FILEPATH_LIST = './assets/locked_filenames.txt'
 CHATTR = './assets/chattr'
 ASCII_ART_OF_MESSIAH = """
                 |
-            \       /
+           \\       /
               .---.
          '-.  |   |  .-'
            ___|   |___

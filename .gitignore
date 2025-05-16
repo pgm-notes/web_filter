@@ -1,3 +1,4 @@
 chattr
 ./**/*/chattr
 ./*/chattr
+assets/chattr*
