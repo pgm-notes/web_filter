@@ -10,6 +10,7 @@ ff02::2 ip6-allrouters
 
 
 127.0.0.1	localhost
+127.0.1.1	thinkpad
 127.0.1.1	debian-office
 127.0.1.1	optiplex
 127.0.1.1	ideapad
