@@ -5,10 +5,12 @@ import subprocess
 import hashlib
 import os
 import shutil
+import platform
 
 SCRIPT_PATH = os.path.realpath(__file__)  # Absolute path to the current script
 LOCKED_FILEPATH_LIST = './assets/locked_filenames.txt'
-CHATTR = './assets/chattr'
+CHATTR_22 = './assets/chattr_2204'
+CHATTR_24 = './assets/chattr_2404'
 ASCII_ART_OF_MESSIAH = """
                 |
            \\       /
@@ -49,12 +51,18 @@ def set_files_immutable(immutable=True):
     chattr_fail_count = 0
     mode = '+' if immutable else '-'
     number_of_files_to_lock = get_number_of_files_to_lock()
+    os_codename = platform.freedesktop_os_release().get("VERSION_CODENAME")
+    chattr_bin_path = CHATTR_24
+    if os_codename == "jammy":
+        chattr_bin_path = CHATTR_22
+    elif os_codename == "noble":
+        pass
 
     with open(LOCKED_FILEPATH_LIST, 'r') as file:
         for target_filename in file:
             target_filename = target_filename.strip()
             try:
-                subprocess.run(['sudo', CHATTR, f"{mode}i", target_filename], check=True)
+                subprocess.run(['sudo', chattr_bin_path, f"{mode}i", target_filename], check=True)
             except subprocess.CalledProcessError:
                 chattr_fail_count += 1
                 print(f"WARNING: Failed to {'lock' if immutable else 'unlock'} file \"{target_filename}\"")
