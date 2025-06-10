@@ -235,6 +235,7 @@ ff02::2 ip6-allrouters
 0.0.0.0 www.sexysave.net
 0.0.0.0 www.pornvid.download
 0.0.0.0 www.vk.ru
+0.0.0.0 search.brave.com
 0.0.0.0 www.aol.ca
 0.0.0.0 www.aol.com
 0.0.0.0 www.yahoo.com
@@ -272,7 +273,7 @@ ff02::2 ip6-allrouters
 0.0.0.0 aol.com
 0.0.0.0 bing.ca
 0.0.0.0 www.bing.com
-0.0.0.0 9xbuddy.site`
+0.0.0.0 9xbuddy.site
 0.0.0.0 9xbuddy.io
 0.0.0.0 9xbuddy.online
 0.0.0.0 9xbuddy.xyz
